@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-config
+  namespace: keycloak
+data:
+  KC_HOSTNAME: "keycloak.example.com"  # Update with your domain
+  KC_HOSTNAME_PORT: "443"
+  KC_DB: "postgres"
+  KC_DB_URL: "jdbc:postgresql://postgres:5432/keycloak"
+  KC_DB_USERNAME: "keycloak"
+  KEYCLOAK_ADMIN: "admin"
+  KC_PROXY: "edge"  # If behind reverse proxy
