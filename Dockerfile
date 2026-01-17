@@ -1,6 +1,18 @@
-FROM quay.io/keycloak/keycloak:26.5.1
+FROM quay.io/keycloak/keycloak:26.1.3 AS builder
 
-# Copy any custom configurations if needed
-# COPY config/ /opt/keycloak/conf/
+WORKDIR /opt/keycloak
 
-# The image will be run with start command via K8s deployment
+RUN /opt/keycloak/bin/kc.sh build
+
+FROM quay.io/keycloak/keycloak:26.1.3
+COPY --from=builder /opt/keycloak/ /opt/keycloak/
+
+ENV KC_PROXY=edge
+ENV KC_HTTP_PORT=8080
+ENV KC_HTTP_ENABLED=true
+ENV KC_PROXY-HEADERS=xforwarded
+ENV KC_HOSTNAME-STRICT=false
+
+EXPOSE 8080
+
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start"]
